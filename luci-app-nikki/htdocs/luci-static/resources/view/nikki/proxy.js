@@ -26,7 +26,7 @@ return view.extend({
 
         m = new form.Map('nikki');
 
-        s = m.section(form.NamedSection, 'proxy', 'proxy', _('Proxy Config'));
+        s = m.section(form.NamedSection, 'proxy', 'proxy', _('🚀 Proxy Config'));
 
         s.tab('proxy', _('Proxy Config'));
 
@@ -159,9 +159,6 @@ return view.extend({
         so.rmempty = false;
 
         s.tab('bypass', _('Bypass'));
-
-        o = s.taboption('bypass', form.Flag, 'bypass_china_mainland_ip', _('Bypass China Mainland IP'));
-        o.rmempty = false;
 
         o = s.taboption('bypass', form.Value, 'proxy_tcp_dport', _('Destination TCP Port to Proxy'));
         o.rmempty = false;
