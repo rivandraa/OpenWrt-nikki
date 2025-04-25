@@ -60,10 +60,6 @@ msgstr ""
 msgid "Bypass"
 msgstr ""
 
-#: applications/luci-app-nikki/htdocs/luci-static/resources/view/nikki/proxy.js:157
-msgid "Bypass China Mainland IP"
-msgstr ""
-
 #: applications/luci-app-nikki/htdocs/luci-static/resources/view/nikki/proxy.js:170
 msgid "Bypass DSCP"
 msgstr ""
