@@ -15,7 +15,7 @@ return view.extend({
 
         m = new form.Map('nikki');
 
-        s = m.section(form.NamedSection, 'config', 'config', _('Profile'));
+        s = m.section(form.NamedSection, 'config', 'config', _('😎 Profile'));
 
         o = s.option(form.FileUpload, '_upload_profile', _('Upload Profile'));
         o.browser = true;
