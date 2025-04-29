@@ -1,6 +1,6 @@
 {
     "admin/services/nikki": {
-        "title": "Nikki",
+        "title": "Nikki TProxy",
         "action": {
             "type": "firstchild"
         },
