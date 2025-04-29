@@ -17,9 +17,7 @@ jobs:
         arch:
           - aarch64_generic
         branch:
-          - openwrt-23.05
           - openwrt-24.10
-          - SNAPSHOT
 
     steps:
       - name: checkout
