@@ -203,6 +203,12 @@ return view.extend({
         o.value('1', _('Enable'));
         o.value('0', _('Disable'));
 
+        o = s.taboption('tun', form.ListValue, 'strict_route', _('Strict Route'));
+        o.optional = false;
+        o.placeholder = _('Unmodified');
+        o.value('1', _('Enable'));
+        o.value('0', _('Disable'));
+
         o = s.taboption('tun', form.ListValue, 'auto_redirect', _('Auto Redirect'));
         o.optional = false;
         o.placeholder = _('Disable');
