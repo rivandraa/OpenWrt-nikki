@@ -50,6 +50,7 @@ config['tun'] = {};
 if (uci.get('nikki', 'proxy', 'tcp_mode') == 'tun' || uci.get('nikki', 'proxy', 'udp_mode') == 'tun') {
 	config['tun']['enable'] = true;
 	config['tun']['auto-route'] = uci_bool(uci.get('nikki', 'mixin', 'auto_route'));
+	config['tun']['strict-route'] = uci_bool(uci.get('nikki', 'mixin', 'strict_route'));
 	config['tun']['auto-redirect'] = uci_bool(uci.get('nikki', 'mixin', 'auto_redirect'));
 	config['tun']['auto-detect-interface'] = uci_bool(uci.get('nikki', 'mixin', 'tun_auto_detect_interface'));
 	config['tun']['device'] = uci.get('nikki', 'mixin', 'tun_device');
