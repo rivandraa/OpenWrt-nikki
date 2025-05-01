@@ -197,6 +197,23 @@ return view.extend({
         o.value('gvisor', 'gVisor');
         o.value('mixed', 'Mixed');
 
+        o = s.taboption('tun', form.ListValue, 'auto_route', _('Auto Route'));
+        o.optional = false;
+        o.placeholder = _('Unmodified');
+        o.value('1', _('Enable'));
+        o.value('0', _('Disable'));
+
+        o = s.taboption('tun', form.ListValue, 'auto_redirect', _('Auto Redirect'));
+        o.optional = false;
+        o.placeholder = _('Disable');
+        o.value('0', _('Disable'));
+
+        o = s.taboption('tun', form.ListValue, 'auto_detect_interface', _('Auto Detect Interface'));
+        o.optional = false;
+        o.placeholder = _('Unmodified');
+        o.value('1', _('Enable'));
+        o.value('0', _('Disable'));
+
         o = s.taboption('tun', form.Value, 'tun_mtu', _('MTU'));
         o.datatype = 'uinteger';
         o.placeholder = _('Unmodified');
