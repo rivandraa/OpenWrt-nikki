@@ -19,28 +19,36 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build nikki and luci-app-nikki
-        uses: openwrt/gh-action-sdk@main
-        env:
-          ARCH: ${{ matrix.arch }}-${{ matrix.branch }}
-          FEEDNAME: nikki
-          PACKAGES: nikki luci-app-nikki
-          NO_REFRESH_CHECK: true
-          EXTRA_DEPENDS: golang/host  # Pastikan dependensi build Go terpenuhi
-          EXTRA_MAKE_FLAGS: -j1 V=s    # Tambahkan flag verbose
+      - name: Initialize SDK and Feeds
+        run: |
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a -p nikki
+          make defconfig
 
-      - name: Archive build logs on failure
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-logs-${{ matrix.arch }}-${{ matrix.branch }}
-          path: logs  # direktori log output (disediakan oleh gh-action-sdk jika tersedia) atau `build_dir/target-*/*/` jika build dir log spesifik.
+      - name: Build nikki package with logging
+        run: |
+          set -o pipefail
+          make package/feeds/nikki/nikki/clean
+          make package/feeds/nikki/nikki/compile -j1 V=s 2>&1 | tee build_nikki.log
 
-      - name: Upload built packages
+      - name: Build luci-app-nikki package with logging
+        run: |
+          set -o pipefail
+          make package/feeds/nikki/luci-app-nikki/clean
+          make package/feeds/nikki/luci-app-nikki/compile -j1 V=s 2>&1 | tee build_luci.log
+
+      - name: Upload build packages
         if: success()
         uses: actions/upload-artifact@v4
         with:
           name: nikki_${{ matrix.arch }}-${{ matrix.branch }}
+          path: bin/packages/${{ matrix.arch }}/nikki
+
+      - name: Upload build logs (if failed)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs-${{ matrix.arch }}-${{ matrix.branch }}
           path: |
-            bin/packages/${{ matrix.arch }}/nikki
-            bin/packages/${{ matrix.arch }}/luci
+            build_nikki.log
+            build_luci.log
