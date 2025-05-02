@@ -19,36 +19,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Initialize SDK and Feeds
-        run: |
-          ./scripts/feeds update -a
-          ./scripts/feeds install -a -p nikki
-          make defconfig
+      - name: Build using OpenWrt SDK
+        uses: openwrt/gh-action-sdk@main
+        env:
+          ARCH: ${{ matrix.arch }}-${{ matrix.branch }}
+          FEEDNAME: nikki
+          PACKAGES: nikki luci-app-nikki
+          NO_REFRESH_CHECK: true
 
-      - name: Build nikki package with logging
-        run: |
-          set -o pipefail
-          make package/feeds/nikki/nikki/clean
-          make package/feeds/nikki/nikki/compile -j1 V=s 2>&1 | tee build_nikki.log
-
-      - name: Build luci-app-nikki package with logging
-        run: |
-          set -o pipefail
-          make package/feeds/nikki/luci-app-nikki/clean
-          make package/feeds/nikki/luci-app-nikki/compile -j1 V=s 2>&1 | tee build_luci.log
-
-      - name: Upload build packages
-        if: success()
+      - name: Upload built packages
         uses: actions/upload-artifact@v4
         with:
           name: nikki_${{ matrix.arch }}-${{ matrix.branch }}
           path: bin/packages/${{ matrix.arch }}/nikki
-
-      - name: Upload build logs (if failed)
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-logs-${{ matrix.arch }}-${{ matrix.branch }}
-          path: |
-            build_nikki.log
-            build_luci.log
