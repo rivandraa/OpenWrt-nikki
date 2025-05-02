@@ -1,0 +1,44 @@
+name: Fetch Nikki Version Info
+
+on:
+  workflow_dispatch:
+
+jobs:
+  fetch-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Fetch Mihomo source
+        run: |
+          git clone --depth=1 https://github.com/MetaCubeX/mihomo.git
+          cd mihomo
+          
+          COMMIT=$(git rev-parse HEAD)
+          DATE=$(git log -1 --format=%cd --date=format:'%Y-%m-%d')
+          VERSION=alpha-${COMMIT:0:8}
+          TAR_NAME=mihomo-${DATE}~${COMMIT:0:8}.tar.gz
+          
+          cd ..
+          tar --exclude='.git' -czf $TAR_NAME mihomo
+
+          HASH=$(sha256sum $TAR_NAME | cut -d ' ' -f1)
+
+          echo "📦 PKG_SOURCE_DATE: $DATE"
+          echo "📦 PKG_SOURCE_VERSION: $COMMIT"
+          echo "📦 PKG_BUILD_VERSION: $VERSION"
+          echo "📦 PKG_MIRROR_HASH: $HASH"
+
+      - name: Save Output
+        run: |
+          echo "PKG_SOURCE_DATE=$DATE" >> output.txt
+          echo "PKG_SOURCE_VERSION=$COMMIT" >> output.txt
+          echo "PKG_BUILD_VERSION=$VERSION" >> output.txt
+          echo "PKG_MIRROR_HASH=$HASH" >> output.txt
+
+      - name: Upload Output
+        uses: actions/upload-artifact@v4
+        with:
+          name: version-info
+          path: output.txt
