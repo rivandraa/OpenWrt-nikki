@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: build
-        uses: openwrt/gh-action-sdk@modif
+        uses: openwrt/gh-action-sdk@main
         env:
           ARCH: ${{ matrix.arch }}-${{ matrix.branch }}
           FEEDNAME: nikki
