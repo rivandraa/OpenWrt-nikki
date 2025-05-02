@@ -191,17 +191,25 @@ return view.extend({
         o.rmempty = false;
 
         o = s.taboption('tun', form.ListValue, 'tun_stack', _('Stack'));
-        o.optional = true;
+        o.optional = false;
         o.placeholder = _('Unmodified');
         o.value('system', 'System');
         o.value('gvisor', 'gVisor');
         o.value('mixed', 'Mixed');
-
-        o = s.taboption('tun', form.ListValue, 'auto_route', _('Auto Route'));
-        o.optional = false;
-        o.placeholder = _('Unmodified');
-        o.value('1', _('Enable'));
-        o.value('0', _('Disable'));
+        
+        o = s.taboption('tun', form.ListValue, 'auto_route', _('Auto Route'))
+        o.optional = false
+        o.placeholder = _('Unmodified')
+        o.value('1', _('Enable'))
+        o.value('0', _('Disable'))
+        
+        o = s.taboption('tun', form.DynamicList, 'auto_route_list', _('Edit Route'))
+        o.retain = true
+        o.depends('auto_route', '1')
+        o.value('0.0.0.0/1')
+        o.value('128.0.0.0/1')
+        o.value('::/1')
+        o.value('8000::/1')
 
         o = s.taboption('tun', form.ListValue, 'strict_route', _('Strict Route'));
         o.optional = false;
@@ -211,7 +219,7 @@ return view.extend({
 
         o = s.taboption('tun', form.ListValue, 'auto_redirect', _('Auto Redirect'));
         o.optional = false;
-        o.placeholder = _('Disable');
+        o.placeholder = _('Unmodified');
         o.value('0', _('Disable'));
 
         o = s.taboption('tun', form.ListValue, 'auto_detect_interface', _('Auto Detect Interface'));
@@ -231,6 +239,7 @@ return view.extend({
         o.value('1', _('Enable'));
 
         o = s.taboption('tun', form.Value, 'tun_gso_max_size', _('GSO Max Size'));
+        o.depends('tun_gso', '1')
         o.datatype = 'uinteger';
         o.placeholder = _('Unmodified');
 
@@ -239,7 +248,7 @@ return view.extend({
         o.placeholder = _('Unmodified');
         o.value('0', _('Disable'));
         o.value('1', _('Enable'));
-
+        
         o = s.taboption('tun', form.Flag, 'tun_dns_hijack', _('Overwrite DNS Hijack'));
         o.rmempty = false;
 
@@ -251,9 +260,12 @@ return view.extend({
 
         s.tab('dns', _('DNS Config'));
 
-        o = s.taboption('dns', form.Value, 'dns_listen', '*' + ' ' + _('DNS Listen'));
+        o = s.taboption('dns', form.ListValue, 'dns_listen', '*' + ' ' + _('DNS Listen'));
         o.datatype = 'ipaddrport(1)';
-        o.placeholder = _('Unmodified');
+        o.value('0.0.0.0:53')
+        o.value('0.0.0.0:1053')
+        o.value('0.0.0.0:5053')
+        o.value('0.0.0.0:5453')
         o.rmempty = false;
 
         o = s.taboption('dns', form.ListValue, 'dns_ipv6', 'IPv6');
@@ -350,10 +362,10 @@ return view.extend({
 
         so = o.subsection.option(form.ListValue, 'type', _('Type'));
         so.value('default-nameserver');
-        so.value('proxy-server-nameserver');
-        so.value('direct-nameserver');
         so.value('nameserver');
         so.value('fallback');
+        so.value('proxy-server-nameserver');
+        so.value('direct-nameserver');
 
         so = o.subsection.option(form.DynamicList, 'nameserver', _('Nameserver'));
 
