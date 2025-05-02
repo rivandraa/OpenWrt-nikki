@@ -7,7 +7,7 @@ jobs:
   generate:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Get latest Mihomo release info
@@ -29,11 +29,19 @@ jobs:
           # Hitung hash
           HASH=$(sha256sum mihomo-${DATE}~${COMMIT:0:8}.tar.zst | cut -d ' ' -f1)
 
-          # Output hasil
+          # Output hasil ke GitHub enviroment variables
           echo "PKG_SOURCE_DATE=$DATE" >> $GITHUB_ENV
           echo "PKG_SOURCE_VERSION=$COMMIT" >> $GITHUB_ENV
           echo "PKG_BUILD_VERSION=$VERSION" >> $GITHUB_ENV
           echo "PKG_MIRROR_HASH=$HASH" >> $GITHUB_ENV
+
+      - name: Update Makefile with latest version info
+        run: |
+          # Update Makefile with latest version details
+          echo "PKG_SOURCE_DATE=${PKG_SOURCE_DATE}" >> Makefile
+          echo "PKG_SOURCE_VERSION=${PKG_SOURCE_VERSION}" >> Makefile
+          echo "PKG_BUILD_VERSION=${PKG_BUILD_VERSION}" >> Makefile
+          echo "PKG_MIRROR_HASH=${PKG_MIRROR_HASH}" >> Makefile
 
       - name: Print results
         run: |
