@@ -199,17 +199,35 @@ return view.extend({
         
         o = s.taboption('tun', form.ListValue, 'auto_route', _('Auto Route'))
         o.optional = false
+        o.default = '1';
         o.placeholder = _('Unmodified')
         o.value('1', _('Enable'))
         o.value('0', _('Disable'))
         
-        o = s.taboption('tun', form.DynamicList, 'auto_route_list', _('Edit Route'))
-        o.retain = true
+        o = s.taboption('tun', form.Flag, 'add_route_list', _('Add Route'));
+        o.rmempty = false;
         o.depends('auto_route', '1')
-        o.value('0.0.0.0/1')
-        o.value('128.0.0.0/1')
-        o.value('::/1')
-        o.value('8000::/1')
+        
+        o = s.taboption('tun', form.DynamicList, 'auto_route_list', _('Route List'));
+        o.retain = true;
+        o.depends('add_route_list', '1');
+        o.value('0.0.0.0/1');
+        o.value('128.0.0.0/1');
+        o.value('::/1');
+        o.value('8000::/1');
+        
+        o.validate = function(section_id) {
+            var addRoute = this.section.children.find(x => x.option === 'add_route_list');
+            var enabled = addRoute && addRoute.formvalue(section_id) === '1';
+        
+            var val = this.formvalue(section_id); // Ini array
+        
+            if (enabled && (!val || val.length === 0)) {
+                return _('Cannot be empty when the option is active.');
+            }
+        
+            return true;
+        };
 
         o = s.taboption('tun', form.ListValue, 'strict_route', _('Strict Route'));
         o.optional = false;
@@ -257,6 +275,19 @@ return view.extend({
         o.depends('tun_dns_hijack', '1');
         o.value('tcp://any:53');
         o.value('udp://any:53');
+
+        o.validate = function(section_id) {
+            var tundnshijack = this.section.children.find(x => x.option === 'tun_dns_hijack');
+            var enabled = tundnshijack && tundnshijack.formvalue(section_id) === '1';
+        
+            var val = this.formvalue(section_id); // Ini array
+        
+            if (enabled && (!val || val.length === 0)) {
+                return _('Cannot be empty when the option is active.');
+            }
+        
+            return true;
+        };
 
         s.tab('dns', _('DNS Config'));
 
