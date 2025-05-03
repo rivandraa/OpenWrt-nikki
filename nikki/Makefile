@@ -96,12 +96,6 @@ endef
 
 define Package/nikki/postrm
 #!/bin/sh
-if [ -z $${IPKG_INSTROOT} ]; then
-    uci -q batch <<-EOF > /dev/null
-        del firewall.nikki
-        commit firewall
-    EOF
-
     # Menghapus file atau direktori terkait paket 'nikki'
     rm -rf /etc/nikki
     rm -rf /www/luci-static/resources/view/nikki
@@ -110,7 +104,6 @@ if [ -z $${IPKG_INSTROOT} ]; then
     rm -f /etc/config/nikki
     rm -f /etc/init.d/nikki
     rm -f /www/tinyfm/nikkifm.php
-fi
 endef
 
 define Build/Prepare
