@@ -4,7 +4,7 @@
 
 return view.extend({
     load: function() {
-        return uci.load('neko');
+        return uci.load('nikki');
     },
     render: function() {
         const iframe = E('iframe', {
