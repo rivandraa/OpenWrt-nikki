@@ -17,14 +17,6 @@ return view.extend({
 
         s = m.section(form.NamedSection, 'config', 'config', _('😎 Profile'));
 
-        o = s.option(form.FileUpload, '_upload_profile', _('Upload Profile'));
-        o.browser = true;
-        o.enable_download = true;
-        o.root_directory = nikki.profilesDir;
-        o.write = function (section_id, formvalue) {
-            return true;
-        };
-
         s = m.section(form.GridSection, 'subscription', _('Subscription'));
         s.addremove = true;
         s.anonymous = true;
