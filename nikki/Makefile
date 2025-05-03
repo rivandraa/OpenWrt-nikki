@@ -88,12 +88,6 @@ define Package/nikki/install
 	$(INSTALL_DATA) $(CURDIR)/files/nikki.upgrade $(1)/lib/upgrade/keep.d/nikki
 endef
 
-define Package/nikki/postinst
-#!/bin/sh
-# postinst override - do nothing to prevent uci parse error
-exit 0
-endef
-
 define Package/nikki/postrm
 #!/bin/sh
     # Menghapus file atau direktori terkait paket 'nikki'
