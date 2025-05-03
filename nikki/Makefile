@@ -5,9 +5,9 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/MetaCubeX/mihomo.git
-PKG_SOURCE_DATE:=2025-05-01
-PKG_SOURCE_VERSION:=7e7016b567b5c54513e4d3572698c226602a8dde
-PKG_MIRROR_HASH:=d3f905acfa349c06d54d50e7843e7b89ba5fbb3d5f9fef786c8e13e4254ea46a
+PKG_SOURCE_DATE:=2025-05-03
+PKG_SOURCE_VERSION:=9e57b298bfb577c19dc01b8e990948577cda7a8e
+PKG_MIRROR_HASH:=1ac4a53273a01c62de211e18f19b8815124d51efda2ae532180788056e08adc3
 
 PKG_LICENSE:=GPL3.0+
 PKG_MAINTAINER:=Joseph Mory <morytyann@gmail.com>
@@ -16,7 +16,7 @@ PKG_BUILD_DEPENDS:=golang/host
 PKG_BUILD_PARALLEL:=1
 PKG_BUILD_FLAGS:=no-mips16
 
-PKG_BUILD_VERSION:=alpha-7e7016b
+PKG_BUILD_VERSION:=alpha-9e57b298
 PKG_BUILD_TIME:=$(shell date -u -Iseconds)
 
 GO_PKG:=github.com/metacubex/mihomo
@@ -72,8 +72,6 @@ define Package/nikki/install
 
 	$(INSTALL_BIN) $(CURDIR)/files/nftables/reserved_ip.nft $(1)/etc/nikki/nftables/reserved_ip.nft
 	$(INSTALL_BIN) $(CURDIR)/files/nftables/reserved_ip6.nft $(1)/etc/nikki/nftables/reserved_ip6.nft
-	$(INSTALL_BIN) $(CURDIR)/files/nftables/geoip_cn.nft $(1)/etc/nikki/nftables/geoip_cn.nft
-	$(INSTALL_BIN) $(CURDIR)/files/nftables/geoip6_cn.nft $(1)/etc/nikki/nftables/geoip6_cn.nft
 
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) $(CURDIR)/files/nikki.conf $(1)/etc/config/nikki
@@ -91,13 +89,7 @@ define Package/nikki/install
 endef
 
 define Package/nikki/postrm
-#!/bin/sh
-#if [ -z $${IPKG_INSTROOT} ]; then
-#	uci -q batch <<-EOF > /dev/null
-#		del firewall.nikki
-#		commit firewall
-#	EOF
-#fi
+!/bin/sh
     # Menghapus file atau direktori terkait paket 'nikki'
     rm -rf /etc/nikki
     rm -rf /www/luci-static/resources/view/nikki
