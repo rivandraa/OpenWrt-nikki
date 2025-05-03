@@ -1,13 +1,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nikki
-PKG_RELEASE:=2
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/MetaCubeX/mihomo.git
 PKG_SOURCE_DATE:=2025-05-01
-PKG_SOURCE_VERSION:=791ea5e568f48b9312c738e5d86d8da6e45667f5
-PKG_MIRROR_HASH:=60dead8c48bfc0001d2216036c780f92cf914f3014ea418b88e821de2000ce98
+PKG_SOURCE_VERSION:=7e7016b567b5c54513e4d3572698c226602a8dde
+PKG_MIRROR_HASH:=d3f905acfa349c06d54d50e7843e7b89ba5fbb3d5f9fef786c8e13e4254ea46a
 
 PKG_LICENSE:=GPL3.0+
 PKG_MAINTAINER:=Joseph Mory <morytyann@gmail.com>
@@ -16,7 +16,7 @@ PKG_BUILD_DEPENDS:=golang/host
 PKG_BUILD_PARALLEL:=1
 PKG_BUILD_FLAGS:=no-mips16
 
-PKG_BUILD_VERSION:=Alpha-791ea5e5
+PKG_BUILD_VERSION:=alpha-7e7016b
 PKG_BUILD_TIME:=$(shell date -u -Iseconds)
 
 GO_PKG:=github.com/metacubex/mihomo
@@ -72,6 +72,8 @@ define Package/nikki/install
 
 	$(INSTALL_BIN) $(CURDIR)/files/nftables/reserved_ip.nft $(1)/etc/nikki/nftables/reserved_ip.nft
 	$(INSTALL_BIN) $(CURDIR)/files/nftables/reserved_ip6.nft $(1)/etc/nikki/nftables/reserved_ip6.nft
+	$(INSTALL_BIN) $(CURDIR)/files/nftables/geoip_cn.nft $(1)/etc/nikki/nftables/geoip_cn.nft
+	$(INSTALL_BIN) $(CURDIR)/files/nftables/geoip6_cn.nft $(1)/etc/nikki/nftables/geoip6_cn.nft
 
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) $(CURDIR)/files/nikki.conf $(1)/etc/config/nikki
@@ -83,10 +85,19 @@ define Package/nikki/install
 	$(INSTALL_BIN) $(CURDIR)/files/uci-defaults/firewall.sh $(1)/etc/uci-defaults/99_firewall_nikki
 	$(INSTALL_BIN) $(CURDIR)/files/uci-defaults/init.sh $(1)/etc/uci-defaults/99_init_nikki
 	$(INSTALL_BIN) $(CURDIR)/files/uci-defaults/migrate.sh $(1)/etc/uci-defaults/99_migrate_nikki
+
+	$(INSTALL_DIR) $(1)/lib/upgrade/keep.d
+	$(INSTALL_DATA) $(CURDIR)/files/nikki.upgrade $(1)/lib/upgrade/keep.d/nikki
 endef
 
 define Package/nikki/postrm
 #!/bin/sh
+#if [ -z $${IPKG_INSTROOT} ]; then
+#	uci -q batch <<-EOF > /dev/null
+#		del firewall.nikki
+#		commit firewall
+#	EOF
+#fi
     # Menghapus file atau direktori terkait paket 'nikki'
     rm -rf /etc/nikki
     rm -rf /www/luci-static/resources/view/nikki
