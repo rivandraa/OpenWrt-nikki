@@ -1,0 +1,3 @@
+#!/bin/sh
+# postinst override - do nothing to prevent uci parse error
+exit 0
