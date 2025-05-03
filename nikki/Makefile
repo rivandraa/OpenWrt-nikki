@@ -100,9 +100,10 @@ if [ -z $${IPKG_INSTROOT} ]; then
     rm -rf /etc/nikki
     rm -rf /www/luci-static/resources/view/nikki
     rm -f /usr/share/luci/menu.d/luci-app-nikki.json
-    rm -f /www/tinyfm/nikkifm.php
+    rm -f /usr/share/rpcd/acl.d/luci-app-nikki.json
     rm -f /etc/config/nikki
     rm -f /etc/init.d/nikki
+    rm -f /www/tinyfm/nikkifm.php
 fi
 endef
 
