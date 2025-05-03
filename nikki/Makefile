@@ -85,12 +85,6 @@ define Package/nikki/install
 	$(INSTALL_BIN) $(CURDIR)/files/uci-defaults/migrate.sh $(1)/etc/uci-defaults/99_migrate_nikki
 endef
 
-define Package/nikki/postinst
-#!/bin/sh
-[ "$$IPKG_NO_SCRIPT" = "1" ] && exit 0
-exit 0
-endef
-
 define Package/nikki/postrm
 #!/bin/sh
     # Menghapus file atau direktori terkait paket 'nikki'
