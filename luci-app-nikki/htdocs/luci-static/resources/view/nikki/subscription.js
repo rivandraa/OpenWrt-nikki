@@ -15,9 +15,7 @@ return view.extend({
 
         m = new form.Map('nikki');
 
-        s = m.section(form.NamedSection, 'config', 'config', _('😎 Profile'));
-
-        s = m.section(form.GridSection, 'subscription', _('Subscription'));
+        s = m.section(form.GridSection, 'subscription', _('🔄 Subscription'));
         s.addremove = true;
         s.anonymous = true;
         s.sortable = true;
