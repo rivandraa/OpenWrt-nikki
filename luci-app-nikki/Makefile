@@ -1,9 +1,10 @@
 include $(TOPDIR)/rules.mk
 
+PKG_NAME:=luci-app-nikki_tproxy-mod
 PKG_VERSION:=1.22.2
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
-LUCI_TITLE:=LuCI Support for nikki
+LUCI_TITLE:=LuCI Support for Nikki TProxy Mod
 LUCI_DEPENDS:=+luci-base +nikki
 
 include $(TOPDIR)/feeds/luci/luci.mk
