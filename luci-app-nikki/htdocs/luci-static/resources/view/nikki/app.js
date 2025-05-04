@@ -37,7 +37,7 @@ return view.extend({
 
         m = new form.Map('nikki');
 
-        s = m.section(form.TableSection, 'status', _('☣️ Status'));
+        s = m.section(form.TableSection, 'status', _('📊 Status'));
         s.anonymous = true;
 
         o = s.option(form.Value, '_app_version', _('App Version'));
@@ -91,7 +91,7 @@ return view.extend({
             return nikki.openDashboard();
         };
 
-        s = m.section(form.NamedSection, 'config', 'config', _('App Config'));
+        s = m.section(form.NamedSection, 'config', 'config', _('⚙️ App Config'));
 
         o = s.option(form.Flag, 'enabled', _('Enable'));
         o.rmempty = false;
@@ -125,7 +125,7 @@ return view.extend({
         o = s.option(form.Flag, 'fast_reload', _('Fast Reload'));
         o.rmempty = false;
 
-        s = m.section(form.NamedSection, 'config', 'config', _('Core Environment Variable Config'));
+        s = m.section(form.NamedSection, 'config', 'config', _('🛠️ Core Environment Variable Config'));
 
         o = s.option(form.Flag, 'disable_safe_path_check', _('Disable Safe Path Check'));
         o.ucisection = 'env';
