@@ -94,10 +94,13 @@ fi
     # Hapus file dan direktori terkait Nikki
     rm -rf /etc/nikki
     rm -rf /www/luci-static/resources/view/nikki
+    rm -rf /tmp/log/nikki
     rm -f /usr/share/luci/menu.d/luci-app-nikki.json
     rm -f /www/tinyfm/nikkifm.php
     rm -f /etc/config/nikki
     rm -f /etc/init.d/nikki
+    rm -f /tmp/lock/procd_nikki.lock
+    rm -f /tmp/run/nikki/profile.json
 exit 0
 endef
 
