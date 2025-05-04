@@ -1,0 +1,75 @@
+name: release-packages-new
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write  # dibutuhkan untuk membuat dan mengupload release
+
+jobs:
+  build:
+    name: ${{ matrix.arch }}-${{ matrix.branch }} build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        arch:
+          - aarch64_generic
+        branch:
+          - openwrt-24.10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build package
+        uses: openwrt/gh-action-sdk@main
+        env:
+          ARCH: ${{ matrix.arch }}-${{ matrix.branch }}
+          FEEDNAME: nikki
+          PACKAGES: luci-app-nikki
+          NO_REFRESH_CHECK: true
+
+      - name: Upload raw artifacts (optional)
+        uses: actions/upload-artifact@v4
+        with:
+          name: nikki_${{ matrix.arch }}-${{ matrix.branch }}
+          path: bin/packages/${{ matrix.arch }}/nikki
+
+      - name: Compress .ipk files
+        run: |
+          mkdir -p output
+          cp bin/packages/${{ matrix.arch }}/nikki/*.ipk output/
+          zip -j nikki_${{ matrix.arch }}-${{ matrix.branch }}.zip output/*.ipk
+
+      - name: Create empty commit and tag
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git fetch origin
+          git checkout --orphan temp-release-branch
+          git rm -rf .
+          git commit --allow-empty -m "Empty commit for release"
+          git tag nikki-${{ matrix.arch }}-${{ matrix.branch }}-${{ github.run_number }}
+          git push origin nikki-${{ matrix.arch }}-${{ matrix.branch }}-${{ github.run_number }}
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: nikki-${{ matrix.arch }}-${{ matrix.branch }}-${{ github.run_number }}
+          release_name: Nikki Build ${{ matrix.arch }} - ${{ matrix.branch }}
+          draft: false
+          prerelease: false
+
+      - name: Upload ZIP to GitHub Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: nikki_${{ matrix.arch }}-${{ matrix.branch }}.zip
+          asset_name: nikki_${{ matrix.arch }}-${{ matrix.branch }}.zip
+          asset_content_type: application/zip
