@@ -1,4 +1,4 @@
-name: build-packages
+name: build-packages-new
 
 on:
   workflow_dispatch:
