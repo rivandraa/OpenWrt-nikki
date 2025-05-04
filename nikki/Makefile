@@ -1,6 +1,6 @@
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=Nikki_Mod
+PKG_NAME:=nikki
 PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
