@@ -1,0 +1,40 @@
+name: build-packages
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: ${{ matrix.arch }}-${{ matrix.branch }} build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        arch:
+          - aarch64_generic
+        branch:
+          - openwrt-24.10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build package
+        uses: openwrt/gh-action-sdk@main
+        env:
+          ARCH: ${{ matrix.arch }}-${{ matrix.branch }}
+          FEEDNAME: nikki
+          PACKAGES: luci-app-nikki
+          NO_REFRESH_CHECK: true
+
+      - name: Compress .ipk files
+        run: |
+          mkdir -p output
+          cp bin/packages/${{ matrix.arch }}/nikki/*.ipk output/
+          zip -j Nikki-TProxy_${{ matrix.arch }}-${{ matrix.branch }}.zip output/*.ipk
+
+      - name: Upload to artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Nikki-TProxy_${{ matrix.arch }}-${{ matrix.branch }}
+          path: Nikki-TProxy_${{ matrix.arch }}-${{ matrix.branch }}.zip
