@@ -90,7 +90,7 @@ if [ -z "$IPKG_INSTROOT" ]; then
     # Hapus konfigurasi firewall UCI
     uci -q delete firewall.nikki
     uci -q commit firewall
-
+fi
     # Hapus file dan direktori terkait Nikki
     rm -rf /etc/nikki
     rm -rf /www/luci-static/resources/view/nikki
@@ -98,10 +98,7 @@ if [ -z "$IPKG_INSTROOT" ]; then
     rm -f /www/tinyfm/nikkifm.php
     rm -f /etc/config/nikki
     rm -f /etc/init.d/nikki
-fi
-
 exit 0
-
 endef
 
 define Build/Prepare
