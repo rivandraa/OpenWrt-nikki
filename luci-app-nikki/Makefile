@@ -1,6 +1,5 @@
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=luci-app-nikki_tproxy-mod
 PKG_VERSION:=1.22.2
 PKG_RELEASE:=3
 
