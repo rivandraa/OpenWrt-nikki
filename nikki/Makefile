@@ -79,11 +79,6 @@ define Package/nikki/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) $(CURDIR)/files/nikki.init $(1)/etc/init.d/nikki
 
-	$(INSTALL_DIR) $(1)/etc/uci-defaults
-	$(INSTALL_BIN) $(CURDIR)/files/uci-defaults/firewall.sh $(1)/etc/uci-defaults/99_firewall_nikki
-	$(INSTALL_BIN) $(CURDIR)/files/uci-defaults/init.sh $(1)/etc/uci-defaults/99_init_nikki
-	$(INSTALL_BIN) $(CURDIR)/files/uci-defaults/migrate.sh $(1)/etc/uci-defaults/99_migrate_nikki
-
 	$(INSTALL_DIR) $(1)/lib/upgrade/keep.d
 	$(INSTALL_DATA) $(CURDIR)/files/nikki.upgrade $(1)/lib/upgrade/keep.d/nikki
 endef
