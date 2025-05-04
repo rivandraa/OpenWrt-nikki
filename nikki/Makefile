@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nikki
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/MetaCubeX/mihomo.git
@@ -89,15 +89,24 @@ define Package/nikki/install
 endef
 
 define Package/nikki/postrm
-!/bin/sh
-    # Menghapus file atau direktori terkait paket 'nikki'
+#!/bin/sh
+# Hanya dijalankan jika bukan dalam proses image build (chroot)
+if [ -z "$IPKG_INSTROOT" ]; then
+    # Hapus konfigurasi firewall UCI
+    uci -q delete firewall.nikki
+    uci -q commit firewall
+
+    # Hapus file dan direktori terkait Nikki
     rm -rf /etc/nikki
     rm -rf /www/luci-static/resources/view/nikki
     rm -f /usr/share/luci/menu.d/luci-app-nikki.json
-    rm -f /usr/share/rpcd/acl.d/luci-app-nikki.json
+    rm -f /www/tinyfm/nikkifm.php
     rm -f /etc/config/nikki
     rm -f /etc/init.d/nikki
-    rm -f /www/tinyfm/nikkifm.php
+fi
+
+exit 0
+
 endef
 
 define Build/Prepare
