@@ -3,7 +3,7 @@ include $(TOPDIR)/rules.mk
 PKG_VERSION:=1.22.2
 PKG_RELEASE:=3
 
-LUCI_TITLE:=LuCI Support for Nikki TProxy Mod
+LUCI_TITLE:=LuCI Support for Nikki TProxy
 LUCI_DEPENDS:=+luci-base +nikki
 
 include $(TOPDIR)/feeds/luci/luci.mk
