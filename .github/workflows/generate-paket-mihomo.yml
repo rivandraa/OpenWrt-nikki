@@ -10,54 +10,24 @@ jobs:
       - name: Checkout dummy
         uses: actions/checkout@v4
 
-      - name: Clone and archive Mihomo
+        - name: Clone, archive, and update Makefile
         run: |
           git clone https://github.com/MetaCubeX/mihomo.git
           cd mihomo
-          # Ambil tag terbaru
           TAG=$(git tag --sort=-creatordate | head -n1)
           git checkout $TAG
-          # Commit dan tanggal
           COMMIT=$(git rev-parse HEAD)
           DATE=$(git log -1 --format=%cd --date=format:'%Y-%m-%d')
           VERSION=${TAG}-${COMMIT:0:8}
           ARCHIVE_NAME=mihomo-${DATE}~${COMMIT:0:8}
-          # Buat tarball
           git archive --format=tar --prefix="${ARCHIVE_NAME}/" HEAD | zstd -19 -o "../${ARCHIVE_NAME}.tar.zst"
-          # Hitung hash
           HASH=$(sha256sum "../${ARCHIVE_NAME}.tar.zst" | cut -d ' ' -f1)
-          # Simpan info ke file di direktori kerja utama
           cd ..
-          {
-            echo "PKG_SOURCE_DATE=$DATE"
-            echo "PKG_SOURCE_VERSION=$COMMIT"
-            echo "PKG_BUILD_VERSION=$VERSION"
-            echo "PKG_MIRROR_HASH=$HASH"
-          } > pkg_info.txt
-      - name: Print Info
-        run: cat pkg_info.txt
 
-      - name: Upload Info
-        uses: actions/upload-artifact@v4
-        with:
-          name: pkg-info
-          path: pkg_info.txt
+          # Langsung edit Makefile
+          MAKEFILE=package/nikki/Makefile  # Ganti dengan path sebenarnya
 
-      - name: Upload Archive
-        uses: actions/upload-artifact@v4
-        with:
-          name: mihomo-archive
-          path: mihomo-*.tar.zst
-
-      - name: Update Makefile with pkg_info.txt
-        run: |
-          # Baca variabel dari pkg_info.txt
-          source pkg_info.txt
-
-          MAKEFILE=nikki/Makefile # ganti ini dengan path sebenarnya
-
-          # Update baris-baris terkait di Makefile
-          sed -i "s/^PKG_SOURCE_DATE:=.*/PKG_SOURCE_DATE:=${PKG_SOURCE_DATE}/" "$MAKEFILE"
-          sed -i "s/^PKG_SOURCE_VERSION:=.*/PKG_SOURCE_VERSION:=${PKG_SOURCE_VERSION}/" "$MAKEFILE"
-          sed -i "s/^PKG_MIRROR_HASH:=.*/PKG_MIRROR_HASH:=${PKG_MIRROR_HASH}/" "$MAKEFILE"
-          sed -i "s/^PKG_BUILD_VERSION:=.*/PKG_BUILD_VERSION:=${PKG_BUILD_VERSION}/" "$MAKEFILE"
+          sed -i "s/^PKG_SOURCE_DATE:=.*/PKG_SOURCE_DATE:=${DATE}/" "$MAKEFILE"
+          sed -i "s/^PKG_SOURCE_VERSION:=.*/PKG_SOURCE_VERSION:=${COMMIT}/" "$MAKEFILE"
+          sed -i "s/^PKG_MIRROR_HASH:=.*/PKG_MIRROR_HASH:=${HASH}/" "$MAKEFILE"
+          sed -i "s/^PKG_BUILD_VERSION:=.*/PKG_BUILD_VERSION:=${VERSION}/" "$MAKEFILE"
