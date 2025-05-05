@@ -26,8 +26,17 @@ jobs:
 
           # Langsung edit Makefile
           MAKEFILE=nikki/Makefile  # Ganti dengan path sebenarnya
+          
+          echo "--- SEBELUM ---"
+          cat "$MAKEFILE"
+          
+      - name: Debug - Cek Makefile ada atau tidak
+        run: ls -l package/nikki/Makefile || echo "Makefile tidak ditemukan"
 
           sed -i "s/^PKG_SOURCE_DATE:=.*/PKG_SOURCE_DATE:=${DATE}/" "$MAKEFILE"
           sed -i "s/^PKG_SOURCE_VERSION:=.*/PKG_SOURCE_VERSION:=${COMMIT}/" "$MAKEFILE"
           sed -i "s/^PKG_MIRROR_HASH:=.*/PKG_MIRROR_HASH:=${HASH}/" "$MAKEFILE"
           sed -i "s/^PKG_BUILD_VERSION:=.*/PKG_BUILD_VERSION:=${VERSION}/" "$MAKEFILE"
+
+          echo "--- SESUDAH ---"
+          cat "$MAKEFILE"
