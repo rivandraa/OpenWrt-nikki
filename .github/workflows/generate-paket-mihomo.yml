@@ -48,3 +48,16 @@ jobs:
         with:
           name: mihomo-archive
           path: mihomo-*.tar.zst
+
+      - name: Update Makefile with pkg_info.txt
+        run: |
+          # Baca variabel dari pkg_info.txt
+          source pkg_info.txt
+
+          MAKEFILE=path/to/Makefile # ganti ini dengan path sebenarnya
+
+          # Update baris-baris terkait di Makefile
+          sed -i "s/^PKG_SOURCE_DATE:=.*/PKG_SOURCE_DATE:=${PKG_SOURCE_DATE}/" "$MAKEFILE"
+          sed -i "s/^PKG_SOURCE_VERSION:=.*/PKG_SOURCE_VERSION:=${PKG_SOURCE_VERSION}/" "$MAKEFILE"
+          sed -i "s/^PKG_MIRROR_HASH:=.*/PKG_MIRROR_HASH:=${PKG_MIRROR_HASH}/" "$MAKEFILE"
+          sed -i "s/^PKG_BUILD_VERSION:=.*/PKG_BUILD_VERSION:=${PKG_BUILD_VERSION}/" "$MAKEFILE"
