@@ -28,10 +28,10 @@ return view.extend({
     },
     render: function (data) {
         const subscriptions = uci.sections('nikki', 'subscription');
-        const appVersion = data[1].app ?? '';
-        const coreVersion = data[1].core ?? '';
-        const running = data[2];
-        const profiles = data[3];
+        const appVersion = (data[1] && data[1].app) ? data[1].app : '';
+        const coreVersion = (data[1] && data[1].core) ? data[1].core : '';
+        const running = (data[2] !== undefined) ? data[2] : false;
+        const profiles = (data[3] !== undefined) ? data[3] : [];
 
         let m, s, o;
 
