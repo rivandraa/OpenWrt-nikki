@@ -54,7 +54,7 @@ jobs:
           # Baca variabel dari pkg_info.txt
           source pkg_info.txt
 
-          MAKEFILE=path/to/Makefile # ganti ini dengan path sebenarnya
+          MAKEFILE=nikki/Makefile # ganti ini dengan path sebenarnya
 
           # Update baris-baris terkait di Makefile
           sed -i "s/^PKG_SOURCE_DATE:=.*/PKG_SOURCE_DATE:=${PKG_SOURCE_DATE}/" "$MAKEFILE"
