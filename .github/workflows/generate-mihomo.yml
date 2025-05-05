@@ -1,0 +1,70 @@
+name: Generate PKG Info
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: List directory structure for debugging
+        run: |
+          echo "Directory structure:"
+          ls -R # Menampilkan semua file dan folder dalam repositori untuk debugging
+      - name: Cari lokasi Makefile
+        run: |
+          echo "Mencari Makefile..."
+          find . -type f -name Makefile
+      - name: Clone and archive Mihomo
+        shell: bash
+        run: |
+          set -e
+          git clone https://github.com/MetaCubeX/mihomo.git
+          cd mihomo
+          TAG=$(git tag --sort=-creatordate | head -n1)
+          git checkout "$TAG"
+          COMMIT=$(git rev-parse HEAD)
+          DATE=$(git log -1 --format=%cd --date=format:'%Y-%m-%d')
+          VERSION="${TAG}-${COMMIT:0:8}"
+          ARCHIVE_NAME="mihomo-${DATE}~${COMMIT:0:8}"
+          git archive --format=tar --prefix="${ARCHIVE_NAME}/" HEAD | zstd -19 -o "../${ARCHIVE_NAME}.tar.zst"
+          HASH=$(sha256sum "../${ARCHIVE_NAME}.tar.zst" | cut -d ' ' -f1)
+          cd ..
+          echo "PKG_SOURCE_DATE=$DATE" > pkg_info.txt
+          echo "PKG_SOURCE_VERSION=$COMMIT" >> pkg_info.txt
+          echo "PKG_BUILD_VERSION=$VERSION" >> pkg_info.txt
+          echo "PKG_MIRROR_HASH=$HASH" >> pkg_info.txt
+          echo "Updating Makefile..."
+      - name: Modifikasi Makefile
+        run: |
+          MAKEFILE_PATH="nikki/Makefile"
+          # Muat info dari file sebelumnya
+          source pkg_info.txt
+          echo "Menerapkan ke $MAKEFILE_PATH"
+          if [ -f "$MAKEFILE_PATH" ]; then
+            echo "Modifying..."
+            sed -i "s/^PKG_SOURCE_DATE:=.*/PKG_SOURCE_DATE:=$PKG_SOURCE_DATE/" "$MAKEFILE_PATH" || echo "PKG_SOURCE_DATE tidak ditemukan"
+            sed -i "s/^PKG_SOURCE_VERSION:=.*/PKG_SOURCE_VERSION:=$PKG_SOURCE_VERSION/" "$MAKEFILE_PATH" || echo "PKG_SOURCE_VERSION tidak ditemukan"
+            sed -i "s/^PKG_BUILD_VERSION:=.*/PKG_BUILD_VERSION:=$PKG_BUILD_VERSION/" "$MAKEFILE_PATH" || echo "PKG_BUILD_VERSION tidak ditemukan"
+            sed -i "s/^PKG_MIRROR_HASH:=.*/PKG_MIRROR_HASH:=$PKG_MIRROR_HASH/" "$MAKEFILE_PATH" || echo "PKG_MIRROR_HASH tidak ditemukan"
+          else
+            echo "Makefile tidak ditemukan di $MAKEFILE_PATH"
+            exit 1
+          fi
+      - name: Print Info
+        run: cat pkg_info.txt
+
+      - name: Upload Info
+        uses: actions/upload-artifact@v4
+        with:
+          name: pkg-info
+          path: pkg_info.txt
+
+      - name: Upload Archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: mihomo-archive
+          path: mihomo-*.tar.zst
