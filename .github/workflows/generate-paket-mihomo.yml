@@ -24,12 +24,12 @@ jobs:
           HASH=$(sha256sum "../${ARCHIVE_NAME}.tar.zst" | cut -d ' ' -f1)
           cd ..
 
+          # Langsung edit Makefile
+          MAKEFILE=nikki/Makefile  # Ganti dengan path sebenarnya
+
       - name: Debug - Cek Makefile ada atau tidak
         run: ls -l nikki/Makefile || echo "Makefile tidak ditemukan"
         
-          # Langsung edit Makefile
-          MAKEFILE=nikki/Makefile  # Ganti dengan path sebenarnya
-          
           echo "--- SEBELUM ---"
           cat "$MAKEFILE"
           
