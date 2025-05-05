@@ -40,8 +40,7 @@ jobs:
           sed -i "s/^ *PKG_MIRROR_HASH *:= *.*/PKG_MIRROR_HASH:=${HASH}/" "$MAKEFILE"
           sed -i "s/^ *PKG_BUILD_VERSION *:= *.*/PKG_BUILD_VERSION:=${VERSION}/" "$MAKEFILE"
       
-        - name: Modify Makefile to update PKG_BUILD_VERSION
-        run: |
+          #Modify Makefile to update PKG_BUILD_VERSION
           sed -i 's/^PKG_BUILD_VERSION:=Prerelease-\(Alpha-[a-z0-9]*\)/PKG_BUILD_VERSION:=\1/' nikki/Makefile
           cat nikki/Makefile  # Untuk memastikan perubahan berhasil
 
