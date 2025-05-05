@@ -18,9 +18,9 @@ return view.extend({
     render: function (data) {
         const hosts = data[1].hosts;
         const networks = data[2];
-        const users = data[3]?.users ?? [];
-        const groups = data[3]?.groups ?? [];
-        const cgroups = data[3]?.cgroups ?? [];
+        const users = (data[3] && data[3].users) ? data[3].users : [];
+        const groups = (data[3] && data[3].groups) ? data[3].groups : [];
+        const cgroups = (data[3] && data[3].cgroups) ? data[3].cgroups : [];
 
         let m, s, o, so;
 
@@ -132,7 +132,7 @@ return view.extend({
         for (const mac in hosts) {
             const host = hosts[mac];
             for (const ip of host.ipaddrs) {
-                const hint = host.name ?? mac;
+                const hint = (host.name != null) ? host.name : mac;
                 so.value(ip, hint ? '%s (%s)'.format(ip, hint) : ip);
             };
         };
@@ -142,7 +142,7 @@ return view.extend({
         for (const mac in hosts) {
             const host = hosts[mac];
             for (const ip of host.ip6addrs) {
-                const hint = host.name ?? mac;
+                const hint = (host.name != null) ? host.name : mac;
                 so.value(ip, hint ? '%s (%s)'.format(ip, hint) : ip);
             };
         };
@@ -151,7 +151,7 @@ return view.extend({
 
         for (const mac in hosts) {
             const host = hosts[mac];
-            const hint = host.name ?? host.ipaddrs[0];
+            const hint = (host.name != null) ? host.name : host.ipaddrs[0];
             so.value(mac, hint ? '%s (%s)'.format(mac, hint) : mac);
         };
 
