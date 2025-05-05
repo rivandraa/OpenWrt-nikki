@@ -42,3 +42,11 @@ jobs:
 
           echo "--- ISI SETELAH EDIT ---"
           cat "$MAKEFILE"
+
+      - name: Commit and push updated Makefile
+        run: |
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+          git add nikki/Makefile
+          git commit -m "Update Makefile after workflow run"
+          git push
