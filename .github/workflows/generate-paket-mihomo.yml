@@ -10,7 +10,7 @@ jobs:
       - name: Checkout dummy
         uses: actions/checkout@v4
 
-        - name: Clone, archive, and update Makefile
+      - name: Clone, archive, and update Makefile
         run: |
           git clone https://github.com/MetaCubeX/mihomo.git
           cd mihomo
