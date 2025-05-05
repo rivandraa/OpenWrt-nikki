@@ -25,7 +25,7 @@ jobs:
           cd ..
 
           # Langsung edit Makefile
-          MAKEFILE=package/nikki/Makefile  # Ganti dengan path sebenarnya
+          MAKEFILE=nikki/Makefile  # Ganti dengan path sebenarnya
 
           sed -i "s/^PKG_SOURCE_DATE:=.*/PKG_SOURCE_DATE:=${DATE}/" "$MAKEFILE"
           sed -i "s/^PKG_SOURCE_VERSION:=.*/PKG_SOURCE_VERSION:=${COMMIT}/" "$MAKEFILE"
