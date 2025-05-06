@@ -1,8 +1,7 @@
 name: Generate PKG Info update
 
 on:
-  schedule:
-    - cron: '0 */6 * * *'  # Menjalankan setiap 6 jam
+  workflow_dispatch:
 
 jobs:
   generate:
@@ -53,5 +52,11 @@ jobs:
           git config --global user.email "you@example.com"
           git config --global user.name "Your Name"
           git add nikki/Makefile
-          git commit -m "Update Makefile after workflow run"
-          git push
+      
+          # Commit hanya jika ada perubahan
+          if git diff --cached --quiet; then
+            echo "Tidak ada perubahan, tidak melakukan commit."
+          else
+            git commit -m "Update Makefile after workflow run"
+            git push
+          fi
