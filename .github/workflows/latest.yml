@@ -6,7 +6,7 @@ on:
       release_type:
         description: "Jenis rilis: latest atau prerelease"
         required: true
-        default: "Prerelease-Alpha"
+        default: "prerelease"
 
 jobs:
   generate:
