@@ -1,4 +1,4 @@
-name: Generate PKG Info update
+name: Generate PKG Info update xxxxcx
 
 on:
   workflow_dispatch:
