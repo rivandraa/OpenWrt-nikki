@@ -29,7 +29,7 @@ jobs:
           else
             # Ambil prerelease terbaru
             TAG=$(curl -s https://api.github.com/repos/MetaCubeX/mihomo/releases \
-              | jq -r '.[] | select(.prerelease) | .tag_name' | head -n1)
+              | jq -r '.[] | .tag_name' | head -n1)
           fi
 
           echo "Menggunakan tag: $TAG"
